@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AbsensiGuru;
+use App\Models\AbsensiGuru; // Pastikan model AbsensiGuru diimpor
+use Carbon\Carbon;
 
 class AbsensiGuruController extends Controller
 {
@@ -43,5 +44,22 @@ class AbsensiGuruController extends Controller
     {
         $absensi_gurus = AbsensiGuru::all();
         return view('absensi_guru', ['absensi_gurus' => $absensi_gurus]);
+    }
+
+    // Menampilkan rekap bulanan untuk absensi guru
+    public function rekapBulanan(Request $request)
+    {
+        // Jika bulan diberikan melalui query string, gunakan itu, jika tidak, gunakan bulan saat ini
+        $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
+        
+        // Konversi ke awal dan akhir bulan
+        $startDate = Carbon::parse($bulan)->startOfMonth()->toDateString();
+        $endDate = Carbon::parse($bulan)->endOfMonth()->toDateString();
+
+        // Ambil data absensi berdasarkan rentang tanggal dalam bulan yang dipilih
+        $absensi_gurus = AbsensiGuru::whereBetween('tanggal', [$startDate, $endDate])->get();
+
+        // Kirim data ke view
+        return view('rekap_bulanan_guru', compact('absensi_gurus', 'bulan'));
     }
 }

@@ -1,30 +1,34 @@
 <?php
-use App\Http\Controllers\AbsensiController;
+
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AbsensiGuruController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-// Route untuk menampilkan daftar absensi di tampilan web
-Route::get('/absensi', [AbsensiController::class, 'index'])
-    ->name('absensi.index');
-    
+
+
+// Rute untuk halaman welcome
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/absensi-guru', [AbsensiGuruController::class, 'index'])->name('absensi-guru.index');
-Route::post('/absensi-guru', [AbsensiGuruController::class, 'store'])->name('absensi-guru.store');
+// Rute untuk halaman utama absensi
+Route::get('/', [AbsensiController::class, 'index'])->name('absensi.index');
+
+// Rute untuk menyimpan data absensi siswa
+Route::post('/absensi/store', [AbsensiController::class, 'store'])->name('absensi.store');
+
+// Rute untuk halaman absensi siswa
+Route::get('/absensi-siswa', [AbsensiController::class, 'index'])->name('absensi.siswa');
+
+// Rute untuk halaman absensi guru
+Route::get('/absensi-guru', [AbsensiGuruController::class, 'index'])->name('absensi.guru');
+
+// Rute untuk rekap bulanan
 Route::get('/rekap-bulanan', [AbsensiController::class, 'rekapBulanan'])->name('rekap.bulanan');
 
+// Rute untuk rekap bulanan absensi guru
+Route::get('/rekap-bulanan-guru', [AbsensiGuruController::class, 'rekapBulanan'])->name('rekap.bulanan.guru');
 
 
-
-
+Route::get('/', function () {
+    return view('welcome');
+});
